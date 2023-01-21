@@ -6,16 +6,13 @@ use crate::DISCRIM_SIZE;
 #[account]
 pub struct Bounty {
     pub poster: Pubkey,
-    pub issue_id: u32,
-    pub bounty_amount: u32,
+    pub issue_number: u32,
+    pub repo_name: String,
+    pub repo_owner: String,
+    pub bounty_amount: u64,
     pub timestamp: i32,
-    pub repo_id: u32
 }
 
 impl Bounty {
-    pub const SIZE: usize = 32 + 8 + 4 + 4 + 8 + DISCRIM_SIZE;
-
-    pub fn get_bounty_lamports(&self) -> u64 {
-        return self.bounty_amount as u64 * LAMPORTS_PER_SOL;
-    }
+    pub const SIZE: usize = 32 + 4 + (39 + 4) + (100 + 4) + 8 + 4 + DISCRIM_SIZE;
 }

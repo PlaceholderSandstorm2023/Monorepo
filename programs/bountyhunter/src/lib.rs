@@ -15,28 +15,34 @@ pub mod bountyhunter {
 
     pub fn create_user_account(
         ctx: Context<Signup>,
-        gh_user_id: u32
+        gh_username: String
     ) -> Result<()> {
-        return instructions::create_user_account(ctx, gh_user_id);
+        return instructions::create_user_account(ctx, gh_username);
     }
 
-    pub fn edit_gh_id(ctx: Context<EditGhId>, new_gh_id: u32) -> Result<()> {
-        return instructions::edit_gh_id(ctx, new_gh_id);
+    pub fn edit_gh_username(ctx: Context<EditGhUsername>, new_gh_username: String) -> Result<()> {
+        return instructions::edit_gh_username(ctx, new_gh_username);
+    }
+
+    pub fn close_user_account(ctx: Context<CloseAccount>) -> Result<()> {
+        return instructions::close_account(ctx);
     }
 
     pub fn create_bounty(
         ctx: Context<CreateBounty>,
-        issue_id: u32,
-        bounty_amount: u32,
-        timestamp: i32,
-        repo_id: u32
+        issue_number: u32,
+        repo_name: String,
+        repo_owner: String,
+        bounty_amount: u64,
+        timestamp: i32
     ) -> Result<()> {
         return instructions::create_bounty(
             ctx,
-            issue_id,
+            issue_number,
+            repo_name,
+            repo_owner,
             bounty_amount,
-            timestamp,
-            repo_id
+            timestamp
         );
     }
 
