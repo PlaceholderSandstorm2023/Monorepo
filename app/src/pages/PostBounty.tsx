@@ -5,6 +5,7 @@ import {useOutletContext} from "react-router-dom";
 import {BodyContext} from "../types";
 import {toast, ToastContainer} from "react-toastify";
 import {useWallet} from "@solana/wallet-adapter-react";
+import {MainBody} from "../components/Styled";
 
 interface FormState {
   repoOwner: string,
@@ -56,6 +57,7 @@ export default function PostBounty() {
   }
 
   return (
+    <MainBody>
     <Container>
       <ToastContainer
         position="top-right"
@@ -119,6 +121,7 @@ export default function PostBounty() {
         </form>
       </div>
     </Container>
+    </MainBody>
   );
 }
 

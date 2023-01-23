@@ -5,6 +5,7 @@ import BountyListing from "../components/BountyListing";
 import {useWallet} from "@solana/wallet-adapter-react";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {MainBody} from "../components/Styled";
 
 export default function Home() {
   const {program, ghApi} = useOutletContext<BodyContext>();
@@ -21,6 +22,7 @@ export default function Home() {
 
   return (
     <>
+      <MainBody>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -33,6 +35,7 @@ export default function Home() {
         pauseOnHover
         theme="dark"/>
     {bounties.map((bounty: any) => <BountyListing bounty={bounty} octokit={ghApi} connectedKey={publicKey} program={program}/>)}
+      </MainBody>
     </>
   );
 }

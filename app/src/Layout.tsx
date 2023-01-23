@@ -70,24 +70,14 @@ export default function Layout() {
         </Column>
       </div>
       <div style={{display: "flex", flexDirection: "row"}}>
-        <MainBody>
-          <Outlet context={{program: program, ghApi: ghApi, userAccount: userAccount}}/>
-        </MainBody>
+        <Outlet context={{program: program, ghApi: ghApi, userAccount: userAccount}}/>
       </div>
     </>
   );
 }
 
 
-const MainBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 5rem;
-`;
+
 
 const HeaderSection = styled.div`
   display: flex;

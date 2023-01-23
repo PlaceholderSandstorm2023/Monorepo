@@ -13,6 +13,17 @@ const DarkOverlay = styled.div`
   position: fixed;
 `;
 
+const MainBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5rem;
+`;
+
 export {
   DarkOverlay,
+  MainBody
 };
