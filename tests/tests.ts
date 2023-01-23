@@ -122,7 +122,6 @@ describe("bountyhunter", () => {
   it("release bounty without registered account", async () => {
     let recipient = anchor.web3.Keypair.generate();
     let pre_signer_balance = await connection.getBalance(user.publicKey);
-
     await program.methods
       .releaseBounty()
       .accounts({

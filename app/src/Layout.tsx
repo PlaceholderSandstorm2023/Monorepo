@@ -1,37 +1,40 @@
 import { Outlet, Link } from "react-router-dom";
-import {WalletDisconnectButton, WalletMultiButton} from "@solana/wallet-adapter-react-ui";
+import {WalletMultiButton} from "@solana/wallet-adapter-react-ui";
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import UserInfo from './components/UserInfo';
 import {useAnchorWallet, useConnection, useWallet} from "@solana/wallet-adapter-react";
 import BountyProgram from "./utils/bounty-program";
-import {Program} from "@project-serum/anchor";
-import {AnchorProvider, Wallet} from "@project-serum/anchor";
+import {AnchorProvider, Program} from "@project-serum/anchor";
 import { Bountyhunter } from "../../target/types/bountyhunter";
-import OctokitWrapper from "./octokit-wrapper";
+import {Keypair} from "@solana/web3.js";
+import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
+import {Octokit} from "octokit";
+
 
 export default function Layout() {
   const {connected} = useWallet();
   const connection = useConnection();
   const [program, setProgram] = useState<BountyProgram | null>(null);
-  const ghApi = new OctokitWrapper();
+  const ghApi = new Octokit();
   const wallet = useAnchorWallet();
+  const [userAccount, setUserAccount] = useState<any>(null);
+
   useEffect(() => {
+
     async function getContract() {
       const bprogram = await Program.at(
         BountyProgram.programId,
         new AnchorProvider(
           connection.connection,
-          wallet!,
+          wallet ?? new NodeWallet(Keypair.generate()),
           AnchorProvider.defaultOptions()
         )
       ) as Program<Bountyhunter>;
       setProgram(new BountyProgram(bprogram));
+      setUserAccount(await program?.getUserAccount(wallet?.publicKey!))
     }
-
-    if (connected) {
-      getContract();
-    }
+    getContract();
   }, [connected]);
 
 
@@ -43,7 +46,7 @@ export default function Layout() {
       }}>
         <Column>
           <Link to={"/"}>
-            <span>LOGO</span>
+            <h1>DevMill</h1>
           </Link>
         </Column>
         <Column>
@@ -54,58 +57,36 @@ export default function Layout() {
             <Link to={"/about"}>
               <span>About</span>
             </Link>
-            <Link to={"/"}>
-              <span>FAQ</span>
+            <Link to={"/bounty"}>
+              <span>Post Bounty</span>
             </Link>
           </HeaderSection>
         </Column>
         <Column>
           <IdSection>
             <WalletMultiButton/>
-            {connected && program !== null ? <UserInfo program={program}/> : null}
+            {connected && program !== null ? <UserInfo program={program} userAccount={userAccount}/> : null}
           </IdSection>
         </Column>
       </div>
-      {/*<WalletDisconnectButton/>*/}
       <div style={{display: "flex", flexDirection: "row"}}>
-        <SideColumn>
-          <span style={{fontSize: "xx-large"}}>Outsource <br/> Your Open Source</span>
-          <PostBounty>POST BOUNTY</PostBounty>
-          <hr style={{width: "89%"}}/>
-        </SideColumn>
         <MainBody>
-          <Outlet context={{program: program}}/>
+          <Outlet context={{program: program, ghApi: ghApi, userAccount: userAccount}}/>
         </MainBody>
       </div>
     </>
   );
 }
 
-const PostBounty = styled.button`
-  background-color: var(--blue);
-  font-size: x-large;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  width: 80%;
-`;
-
-const SideColumn = styled.div`
-  flex: 33.33%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: var(--background-secondary);
-  margin: 2rem;
-  padding: 1rem;
-  align-items: center;
-  //flex-wrap: wrap;
-`;
 
 const MainBody = styled.div`
-  flex: 66.66%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5rem;
 `;
 
 const HeaderSection = styled.div`

@@ -1,24 +1,25 @@
 import styled from "styled-components";
 import {useWallet} from "@solana/wallet-adapter-react";
-import {useEffect, useMemo, useState} from "react";
+import {useState} from "react";
 import BountyProgram from "../utils/bounty-program";
 import Popup from 'reactjs-popup';
 import {DarkOverlay} from "./Styled";
-import { Bountyhunter } from "../../../target/types/bountyhunter";
 
 
 interface Props {
-  program: BountyProgram
+  program: BountyProgram,
+  userAccount: any
 }
 
 export default function UserInfo(props: Props) {
   const program = props.program;
   const {connected, publicKey} = useWallet();
-  const [userAccount, setUserAccount] = useState<any>(null);
+  const [userAccount, setUserAccount] = useState<any>(props.userAccount);
   const [openPop, setOpenPop] = useState(false);
   const closeModal = () => setOpenPop(false);
   const [username, setUsername] = useState("");
   const [error, setError] = useState("dick");
+
   const fetchData = async () => {
     if (!connected || program === null) {
       setUserAccount(null);
@@ -29,9 +30,6 @@ export default function UserInfo(props: Props) {
     setUserAccount(account);
 
   }
-  useEffect(() => {
-    fetchData().then();
-  }, [userAccount]);
 
   function registerUser() {
     fetch(`https://raw.githubusercontent.com/${username}/${username}/main/README.md`)
@@ -57,7 +55,7 @@ export default function UserInfo(props: Props) {
 
   return (
     <>
-      {userAccount === null
+      {!userAccount
         ?
         <>
           <a onClick={() => setOpenPop(true)}>
@@ -66,7 +64,7 @@ export default function UserInfo(props: Props) {
           </Container>
         </a>
           <DarkOverlay style={{visibility: openPop ? "visible" : "hidden"}}>
-          <Popup open={openPop} modal closeOnDocumentClick onClose={closeModal}>
+          <Popup open={openPop} modal closeOnDocumentClick closeOnEscape onClose={closeModal}>
             <PopupContainer>
               <label>
                 Github username:

@@ -13,6 +13,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
 import { createGlobalStyle } from 'styled-components';
 import About from './pages/About';
+import PostBounty from "./pages/PostBounty";
 
 import * as buffer from "buffer";
 window.Buffer = buffer.Buffer;
@@ -52,6 +53,7 @@ function App() {
                 <Route path="/" element={<Layout/>}>
                   <Route index element={<Home/>}/>
                   <Route path="/about" element={<About/>} />
+                  <Route path={"/bounty"} element={<PostBounty/>}/>
                 </Route>
               </Routes>
             </BrowserRouter>
